@@ -11,6 +11,9 @@ from loguru import logger
 
 from manga_ocr import MangaOcr
 
+from openai import OpenAI
+
+client = OpenAI(api_key = 'your API key here')
 
 def are_images_identical(img1, img2):
     if None in (img1, img2):
@@ -28,6 +31,18 @@ def process_and_write_results(mocr, img_or_path, write_to):
     t1 = time.time()
 
     logger.info(f"Text recognized in {t1 - t0:0.03f} s: {text}")
+    prompt = f"다음 일본어 문장을 자연스럽게 한국어로 번역해줘: \n {text}" #prompt: Translate this to Korean : text
+
+    response = client.chat.completions.create(
+        model = "gpt-3.5-turbo",
+        messages = [
+            {"role": "system", "content": "당신은 일본어를 자연스럽게 번역하는 번역가입니다."}, # content: You are translator for Japanese to Korean
+            {"role": "user", "content": prompt}
+            ]
+        )
+    translated = response.choices[0].message.content.strip()
+    logger.info(f"Translated:\n{translated}")
+    
 
     if write_to == "clipboard":
         pyperclip.copy(text)
