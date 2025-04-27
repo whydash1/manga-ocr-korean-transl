@@ -1,3 +1,5 @@
+Manga OCR에 한국어 번역 기능을 추가했습니다. (Added Korean Translation on the Manga OCR)
+
 # Manga OCR
 
 Optical character recognition for Japanese text, with the main focus being Japanese manga.
